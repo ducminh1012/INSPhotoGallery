@@ -33,13 +33,14 @@ private func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class INSScalingImageView: UIScrollView {
     lazy var imageView: UIImageView = {
         let imageView = UIImageView(frame: self.bounds)
+        imageView.contentMode = .scaleAspectFill
         self.addSubview(imageView)
         return imageView
     }()
     
     var image: UIImage? {
         didSet {
-            updateImage(image)
+            updateImage(image, size: bounds.size)
         }
     }
     
@@ -95,9 +96,7 @@ class INSScalingImageView: UIScrollView {
         self.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset);
     }
     
-    private func updateImage(_ image: UIImage?) {
-        let size = image?.size ?? CGSize.zero
-        
+    private func updateImage(_ image: UIImage?, size: CGSize = CGSize.zero) {
         imageView.transform = CGAffineTransform.identity
         imageView.image = image
         imageView.frame = CGRect(origin: CGPoint.zero, size: size)
@@ -108,24 +107,24 @@ class INSScalingImageView: UIScrollView {
     }
     
     private func updateZoomScale() {
-        if let image = imageView.image {
-            let scrollViewFrame = self.bounds
-            let scaleWidth = scrollViewFrame.size.width / image.size.width
-            let scaleHeight = scrollViewFrame.size.height / image.size.height
-            let minimumScale = min(scaleWidth, scaleHeight)
-            
-            self.minimumZoomScale = minimumScale
-            self.maximumZoomScale = max(minimumScale, self.maximumZoomScale)
-            
-            self.zoomScale = minimumZoomScale
-
-            // scrollView.panGestureRecognizer.enabled is on by default and enabled by
-            // viewWillLayoutSubviews in the container controller so disable it here
-            // to prevent an interference with the container controller's pan gesture.
-            //
-            // This is enabled in scrollViewWillBeginZooming so panning while zoomed-in
-            // is unaffected.
-            self.panGestureRecognizer.isEnabled = false
-        }
+//        if let image = imageView.image {
+//            let scrollViewFrame = self.bounds
+//            let scaleWidth = scrollViewFrame.size.width / image.size.width
+//            let scaleHeight = scrollViewFrame.size.height / image.size.height
+//            let minimumScale = min(scaleWidth, scaleHeight)
+//
+//            self.minimumZoomScale = minimumScale
+//            self.maximumZoomScale = max(minimumScale, self.maximumZoomScale)
+//
+//            self.zoomScale = minimumZoomScale
+//
+//            // scrollView.panGestureRecognizer.enabled is on by default and enabled by
+//            // viewWillLayoutSubviews in the container controller so disable it here
+//            // to prevent an interference with the container controller's pan gesture.
+//            //
+//            // This is enabled in scrollViewWillBeginZooming so panning while zoomed-in
+//            // is unaffected.
+//            self.panGestureRecognizer.isEnabled = false
+//        }
     }
 }
